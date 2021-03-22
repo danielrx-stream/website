@@ -1,0 +1,72 @@
+.line {
+    fill: none;
+    display: inline;
+    stroke: black;
+}
+
+.sq {
+    stroke-width: 0;
+}
+
+.thick {
+    stroke-width: 2;
+}
+
+.thin {
+    stroke-width: 0.8;
+}
+
+.very-thin {
+    stroke-width: 0.4;
+}
+
+.skin {
+    fill: #55883a;
+}
+
+.hair {
+    fill: #faf0be;
+}
+
+.shirt {
+    fill: #0247f8;
+}
+
+.dank {
+    fill: #b8bd7a;
+}
+
+.lips {
+    fill: #a75a31;
+}
+
+.sclera {
+    fill: white;
+}
+
+.iris {
+    fill: black;
+}
+
+.nose {
+    fill: black;
+}
+
+.pupil {
+    fill: white;
+    stroke: white;
+    stroke-width: 0.5;
+}
+
+g {
+    stroke: black;
+    stroke-linecap: round;
+}
+
+.hidden {
+    display: none;
+}
+
+.twitch-colour {
+    fill: #6441a5;
+}

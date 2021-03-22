@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="./">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build a BTTV</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="stylesheet" href="./css/svg-style.css" >
+  <link rel="stylesheet" href="./css/style.css" >
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
+  <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" > 
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@iconfu/svg-inject@1.2.3/dist/svg-inject.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/save-svg-as-png@1.4.17/lib/saveSvgAsPng.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.6.0/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.6.0/vendor/FileSaver.js"></script>
+  <script src="./js/index.js"></script>
+</head>
+<body>
+  <div id="main-grid-container">
+    <header class="center"><h1>Build-a-BTTV</h1> </header>
+    <div id="content-grid-container">
+      <div class="box overview one-one full-size" id="emote-box-overview" >
+        <div class="full-size center" id="emote-grid">
+        </div>
+      </div>
+      <div class="box overview full-size center" id="overview-toolbox" >
+        <div class="toolbox-row">
+          <p>Size </p>
+          <select id="emote-scale">
+            <option value="all">All</option>
+            <option value="bttv">BTTV</option>
+            <option value="twitch">Twitch</option>
+          </select>
+        </div>
+        <div class="toolbox-row">
+          <p>Download (BETA) </p>
+          <button id="download-link" style="width:100%;box-sizing: border-box">
+            <img height="40px" width="60px" id="download-img" src="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/svg/file-download-solid.svg" onload="SVGInject(this)"/>
+          </button>
+        </div>
+        <div id="progress-container">
+          <img class="one-one" id="progress-image" src="feelsdankman.png"/>
+          <div class="one-one" id="progress-image-cover"></div>
+        </div>
+        <div class="toolbox-row-3" id="page-selector">
+          <div id="page-back">
+            <i id="page-btn-back" class="las la-2x la-arrow-alt-circle-left"></i>
+          </div>
+            <p id="page-number">Page 1 </p>
+            <div id="page-forward">
+              <i id="page-btn-forward" class="las la-2x la-arrow-alt-circle-right"></i>
+            </div>
+        </div>
+      </div>
+      <div class="box one-one" id="emote-box">
+        <div id="emote-wrapper" ></div>
+      </div>
+      <div id="toolbox-grid-container" class="box">
+        <p id="emote-name"></p>
+        <div class="toolbox-row">
+          <p>Layer name</p>
+          <select id="layer-name"></select>
+        </div>
+        <div class="toolbox-row">
+          <p>Layer colour</p>
+          <div id="picker"></div>
+        </div>
+        <div class="toolbox-row">
+          <p>Hair Style</p>
+          <select id="hair-type"></select>
+        </div>
+        <button id="overview-link">Go to overview</button>
+      </div>
+    </div>
+    <footer class="center">
+      Made by
+      <div id="draw-border">
+      <a href="https://www.twitch.tv/danielrx_" target="_blank" id="twitch-link" class="btn center twitch-colour">
+        DanielRX_
+        <img style="margin-left: 15px" id="twitch-logo" src="site-svg/twitch.png" width="25px" />
+      </a>
+      <div>
+    </footer>
+  </div>
+</body>
+</html>
