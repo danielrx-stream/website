@@ -38,10 +38,12 @@ i.lab, i.las {
 }
 
 #links {
-    max-width: 500px;
+    max-width: 800px;
     width: auto;
-    display: block;
+    display: grid;
     margin: 20px auto;
+    gap: 0px 5%;
+    grid-template-columns: 1fr 1fr;
 }
 
 .link {
