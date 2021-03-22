@@ -178,7 +178,7 @@ window.onload = () => {
     pickr.on('save', (color) => { lastLayerColour = `#${color.toHEXA().join('')}`; pickerColour = undefined; });
     pickr.on('change', (color) => { pickerColour = color; });
 
-    const img = (name) => `<img id="${name}-svg" src="svg/${name}.svg" onload="SVGInject(this)" style="display:none" height="50vh" width="auto" />`;
+    const img = (name) => `<img id="${name}-svg" src="/assets/svg/${name}.svg" onload="SVGInject(this)" style="display:none" height="50vh" width="auto" />`;
     $('#emote-wrapper').prepend(...svgList.map(img));
 
     const init = () => {

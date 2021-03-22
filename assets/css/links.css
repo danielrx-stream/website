@@ -14,7 +14,7 @@
 }
 
 body {
-    background: url('bg.jpg');
+    background: url('/assets/img/bg.jpg');
     font-weight: 600;
     display: block;
 }
