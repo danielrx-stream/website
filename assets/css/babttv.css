@@ -29,6 +29,11 @@ select { width:100% }
     ".";
 }
 
+#download-img {
+     height: 40px;
+     width: 60px;
+}
+
 .one-one { grid-column: 1; grid-row: 1; }
 .full-size { height: 100%; width: 100%; }
 .center { align-items: center; justify-items: center; }
@@ -163,7 +168,9 @@ h1 {
     z-index: -2;
 }
 
-
+#twitch-logo {
+    margin-left: 15px
+}
 
 
 #draw-border {
