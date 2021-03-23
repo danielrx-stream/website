@@ -160,7 +160,11 @@ h1 {
 
 #overview-link {
     grid-row-end: -1;
-    width: 100%;
+    width: 90%;
+    /* background: transparent; */
+    /* border-color: var(--background); */
+    border-radius: 0.25em;
+    margin-left: 5%;
     font-size: larger;
 }
 
