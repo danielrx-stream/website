@@ -3,6 +3,8 @@
     --background-dark: rgb(26, 28, 34);
     --background: rgb(37, 40, 48);
     --twitch: #6441a5;
+    --bg: rgb(97, 102, 117);
+    --var-one: #4285f4;
 }
 
 select { width:100% }
@@ -118,7 +120,11 @@ header, footer {
 * {
     box-sizing: border-box;
     padding: 0;
+    outline: none;
+    border: none;
+    -webkit-appearance: none;
     margin: 0;
+    text-align: center;
     font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -251,4 +257,123 @@ select {
 
 .breathing:hover {
     transform: scale(1.25);
+}
+
+/*! Pickr 1.8.0 MIT | https://github.com/Simonwep/pickr */
+/* Button on page */
+.pcr-button {
+    position: relative;
+    height: 2em;
+    width: 8em;
+    border-radius: 0.5em;
+    transition: all .3s;
+}
+
+.pcr-button:after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5em;
+    background: currentColor;
+}
+
+.pcr-app * { border-radius: 0.5em; }
+
+.pcr-app {
+    width: 28.5em;
+    max-width: 95vw;
+    padding: .8em;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+    border-radius: 1em;
+    background: var(--bg);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s, visibility 0s .3s;
+    left: 0;
+    top: 0;
+}
+
+.pcr-app.visible {
+    transition: opacity .3s;
+    visibility: visible;
+    opacity: 1
+}
+
+.pcr-interaction {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.pcr-interaction :hover { filter: brightness(0.9); }
+.pcr-interaction * { color: white; }
+
+.pcr-interaction input {
+    letter-spacing: 0.07em;
+    font-size: 0.75em;
+    transition: all 0.15s;
+    padding: 0.45em 0.5em;
+    margin-top: 0.75em;
+}
+
+.pcr-interaction input:focus { box-shadow: 0 0 0 1px hsla(0, 0%, 100%, .85), 0 0 0 3px rgba(66, 133, 244, .75) }
+
+.pcr-result {
+    flex: 1 1 8em;
+    min-width: 8em;
+    transition: all 0.2s;
+    background-color: var(--background-light);
+}
+
+.pcr-result::-moz-selection,
+.pcr-result::-moz-selection::selection,
+.pcr-result::-moz-selection.active { background: var(--var-one); }
+
+
+.pcr-save { background: var(--var-one); margin-left: 0.6em; }
+
+.pcr-selection { display: flex; }
+
+.pcr-selection * { display: flex; }
+
+.pcr-picker {
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    border: 2px solid white;
+    border-radius: 100%;
+}
+
+[class^="pcr-color"] {
+    position: relative;
+    flex-direction: column;
+    cursor: grab;
+    cursor: -webkit-grab;
+}
+
+[class^="pcr-color"]:active {
+    cursor: grabbing;
+    cursor: -webkit-grabbing
+}
+
+.pcr-color-palette { width: 100%; height: 8em; }
+.pcr-palette { flex-grow: 1; }
+.pcr-color-chooser { margin-left: 0.75em; }
+
+.pcr-picker {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.pcr-slider {
+    width: 8px;
+    flex-grow: 1;
+    border-radius: 5em;
+    background: linear-gradient(180deg, red, #ff0, #0f0, #0ff, #00f, #f0f, red)
 }
