@@ -6,11 +6,11 @@ let lastLayerColour;
 
 const titleCase = (s) => s[0].toUpperCase() + s.slice(1);
 
-const getLayerName = () => $('#layer-name').val();
+const getLayerName = () => $('#layer-name-button').text().toLowerCase();
 const getEmoteName = (forceEmoteName) => (forceEmoteName || $('#emote-name').text()).toLowerCase();
 const getSVGOfEmote = (emoteName) => $(`[id^="variant-${emoteName}"]`).parents('svg');
 
-const getLayerColour = () => $(`[id$="-svg"]:visible .${getLayerName()}`).css('fill');
+const getLayerColour = (forceColour) => $(`[id$="-svg"]:visible .${forceColour || getLayerName()}`).css('fill');
 
 const getEmoteNames = () => [...new Set($('[id^="variant-"]').map((i, e) => $(e).attr('id').replace('variant-', '').replace(/--inject-.*/, '')))];
 
@@ -27,23 +27,30 @@ const getHairTypes = (emoteName) => {
     return ['none', ...new Set(getSVGOfEmote(emoteName).find('[id^="core-hair-"]').map((i, e) => $(e).attr('id').replace(/--inject-.*/, '').replace('core-hair-', '')))];
 };
 
-const setupOptions = (container, options) => {
-    $(`${container} option`).remove();
+
+const setupOptions = (container, options, f) => {
+    $(`#${container} li`).remove();
+    const [first] = options;
+    $(`#${container}-button`).text(titleCase(first));
     for(const option of options) {
-        $(container).append(`<option value="${option.toLowerCase()}">${titleCase(option)}</option>`);
+        $(`#${container}`).append(`<li><button id="${container}-${option}-btn" class="dropdown-item" type="button">${titleCase(option)}</button></li>`);
+        $(`#${container}-${option}-btn`).on('click', () => {
+            $(`#${container}-button`).text(titleCase(option));
+            (f || (() => {}))(option);
+        })
     }
 };
 
-const setLayerColour = () => pickr.setColor(getLayerColour());
+const setLayerColour = (forceColour) => pickr.setColor(getLayerColour(forceColour));
 
 
 const svgList = ['peeporecon', 'ge', 'hypers', 'ppl', 'monkas', 'dankthink', 'peeposhy'];
 
 let pageNumber = 1;
 
-const showHair = () => {
+const showHair = (hairType) => {
     $('[id^="core-hair"]').hide();
-    $(`[id^="core-hair-${$('#hair-type').val()}"]`).show();
+    $(`[id^="core-hair-${hairType}"]`).show();
 };
 
 const showEmote = (emoteNameForce) => {
@@ -116,8 +123,9 @@ const setEmoteLayers = (emoteNameForce) => {
     const emoteName = getEmoteName(emoteNameForce);
     showEmote(emoteName);
     pickerColour = undefined;
-    setupOptions('#layer-name', getLayers(emoteName));
-    setupOptions('#hair-type', getHairTypes(emoteName));
+    setupOptions('layer-name', getLayers(emoteName), setLayerColour);
+    setupOptions('hair-type', getHairTypes(emoteName), showHair);
+    setupOptions('emote-scale', ['all', 'bttv', 'twitch']);
     setTimeout(setLayerColour, 100);
 };
 
@@ -127,7 +135,7 @@ const colourLayerIn = () => {
 };
 
 const getEmoteSizes = () => {
-    switch($('#emote-scale').val()) {
+    switch($('#emote-scale-button').text().toLowerCase()) {
         case 'all': return [112, 4096];
         case 'twitch': return [4096];
         case 'bttv': return [112];
@@ -166,7 +174,7 @@ window.onload = () => {
     const el = document.querySelector('#picker');
     pickr = Pickr.create({
         comparison: true,
-        components: {preview: true, hue: true, interaction: {input: true, save: true}},
+        components: {hue: true, interaction: {input: true, save: true}},
         el,
         theme: 'classic'
     });
@@ -182,13 +190,13 @@ window.onload = () => {
     const init = () => {
         $('#emote-name').text(titleCase(getEmoteNames()[0]));
         setEmoteLayers();
+        $('.pcr-button').click()
     };
 
     setInterval(colourLayerIn, 100);
     setTimeout(init, 500);
 
     $('#overview-link').on('click', showOverview);
-    $('#layer-name').on('change', setLayerColour);
     $('#hair-type').on('change', showHair);
     $('#download-link').on('click', downloadEmotes);
     $('#page-forward').on('click', goForwardPage);
