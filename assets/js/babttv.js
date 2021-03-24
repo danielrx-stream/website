@@ -37,7 +37,7 @@ const setupOptions = (container, options) => {
 const setLayerColour = () => pickr.setColor(getLayerColour());
 
 
-const svgList = ['peeporecon', 'ge', 'hypers', 'ppl', 'monkas', 'dankthink', 'peeposhy', 'pepelaugh', 'swooner'];
+const svgList = ['peeporecon', 'ge', 'hypers', 'ppl', 'monkas', 'dankthink', 'peeposhy'];
 
 let pageNumber = 1;
 
@@ -101,8 +101,7 @@ const addAllToOverview = async() => {
     const oldEmote = getEmoteName();
     $('#emote-wrapper').hide();
     $('#emote-grid img').remove();
-    const emoteNames = getEmoteNames();
-    for(const emoteName of emoteNames) {
+    for(const emoteName of getEmoteNames()) {
         showEmote(emoteName);
         await addToOverview(emoteName);
     }
@@ -123,9 +122,8 @@ const setEmoteLayers = (emoteNameForce) => {
 };
 
 const colourLayerIn = () => {
-    if(typeof pickerColour !== 'undefined') {
-        $(`svg .${getLayerName()}`).css({fill: `#${typeof pickerColour === 'string' ? pickerColour : pickerColour.toHEXA().join('')}`});
-    }
+    if(typeof pickerColour === 'undefined') { return; }
+    $(`svg .${getLayerName()}`).css({fill: `#${typeof pickerColour === 'string' ? pickerColour : pickerColour.toHEXA().join('')}`});
 };
 
 const getEmoteSizes = () => {
@@ -144,7 +142,7 @@ const downloadEmotes = async() => {
     const emoteNames = getEmoteNames();
     $('#emote-wrapper').hide();
     let j = 0;
-    for(const emoteName of getEmoteNames()) {
+    for(const emoteName of emoteNames) {
         showEmote(emoteName);
         const emote = $(`[id^="variant-${emoteName}"]`);
         const id = emote.parents('svg').attr('id');
