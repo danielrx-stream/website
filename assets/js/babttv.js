@@ -190,7 +190,6 @@ window.onload = () => {
     const init = () => {
         $('#emote-name').text(titleCase(getEmoteNames()[0]));
         setEmoteLayers();
-        $('.pcr-button').click()
     };
 
     setInterval(colourLayerIn, 100);
