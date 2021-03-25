@@ -24,7 +24,7 @@ const getLayers = (emoteName) => {
 };
 
 const getHairTypes = (emoteName) => {
-    return ['none', ...new Set(getSVGOfEmote(emoteName).find('[id^="core-hair-"]').map((i, e) => $(e).attr('id').replace(/--inject-.*/, '').replace('core-hair-', '')))];
+    return ['none', ...new Set(getSVGOfEmote(emoteName).find(`[id*="${emoteName}"] [id^="core-hair-"]`).map((i, e) => $(e).attr('id').replace(/--inject-.*/, '').replace('core-hair-', '')))];
 };
 
 
@@ -42,7 +42,6 @@ const setupOptions = (container, options, f) => {
 };
 
 const setLayerColour = (forceColour) => pickr.setColor(getLayerColour(forceColour));
-
 
 const svgList = ['peeporecon', 'ge', 'hypers', 'ppl', 'monkas', 'dankthink', 'peeposhy'];
 

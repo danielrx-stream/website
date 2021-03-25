@@ -1,4 +1,6 @@
 :root {
+    --background-very-very-light: rgb(118, 123, 138);
+    --background-very-light: rgb(93, 98, 113);
     --background-light: rgb(67, 72, 87);
     --background-dark: rgb(26, 28, 34);
     --background: rgb(37, 40, 48);
@@ -7,7 +9,21 @@
     --var-one: #4285f4;
 }
 
-select { width:100% }
+* {
+    box-sizing: border-box;
+    padding: 0;
+    outline: none;
+    border: none;
+    -webkit-appearance: none;
+    margin: 0;
+    text-align: center;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+    overflow: hidden;
+    background-color: var(--background);
+}
 
 .box {
     display: flex;
@@ -21,6 +37,11 @@ select { width:100% }
     width:100%;
 }
 
+#download-img {
+    height: 40px;
+    fill: white;
+}
+
 #main-grid-container {
     height: 100vh;
     display: grid;
@@ -31,19 +52,14 @@ select { width:100% }
     ".";
 }
 
-#download-img {
-    height: 40px;
-    width: 60px;
-    fill: white;
-}
-
 .one-one { grid-column: 1; grid-row: 1; }
 .full-size { height: 100%; width: 100%; }
-.center { align-items: center; justify-items: center; }
 
 #emote-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    justify-items: center;
 }
 
 #overview-toolbox {
@@ -52,11 +68,6 @@ select { width:100% }
     grid-row: 1;
     grid-template-rows: 2fr 2fr 4fr 1fr;
     grid-template-columns: 1fr;
-    grid-template-areas: "."
-    "."
-    "."
-    "."
-    ".";
 }
 
 #content-grid-container {
@@ -71,12 +82,6 @@ select { width:100% }
     grid-column: 2;
     grid-row: 1;
     grid-template-rows: 0.8fr repeat(3, 1fr) 0.4fr;
-    grid-template-columns: 1fr;
-    grid-template-areas:
-        "."
-        "."
-        "."
-        ".";
 }
 
 .toolbox-row {
@@ -86,7 +91,6 @@ select { width:100% }
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0px 2.5%;
-    grid-template-areas: ". .";
     align-items: center;
 }
 
@@ -97,17 +101,16 @@ select { width:100% }
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 0px 2.5%;
-    grid-template-areas: ". . .";
     justify-content: center;
     align-items: center;
 }
 
-.toolbox-row-3 * {
-    justify-self: center;
-}
+.toolbox-row-3 * { justify-self: center; }
 
 .toolbox-row :first-child { justify-self: left; }
 .toolbox-row :nth-child(2) { justify-self: center; }
+
+header { font-size: 350%; }
 
 header, footer {
     background-color: var(--background-dark);
@@ -117,34 +120,7 @@ header, footer {
     align-items: center;
 }
 
-* {
-    box-sizing: border-box;
-    padding: 0;
-    outline: none;
-    border: none;
-    -webkit-appearance: none;
-    margin: 0;
-    text-align: center;
-    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-
-body {
-    overflow: hidden;
-    background-color: var(--background);
-}
-
-h1 {
-    font-size: 350%;
-}
-
-#emote-name {
-    width:100%;
-    font-size: 250%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+#emote-name { font-size: 250%; }
 
 #page-selector {
     grid-row-end: -1;
@@ -169,26 +145,14 @@ h1 {
 #overview-link {
     grid-row-end: -1;
     width: 90%;
-    /* background: transparent; */
-    /* border-color: var(--background); */
     border-radius: 0.25em;
     margin-left: 5%;
     font-size: larger;
 }
 
-.overview {
-    z-index: -2;
-}
+.overview { z-index: -2; }
 
-#twitch-logo {
-    margin-left: 15px
-}
-
-select {
-    color: black;
-}
-
-
+#twitch-logo { margin-left: 15px }
 
 #draw-border {
     display: flex;
@@ -251,13 +215,8 @@ select {
     transition: border-color 0s ease-out 0.6s, width 0.3s ease-out 0.6s, height 0.3s ease-out 1s;
 }
 
-.breathing {
-    transition: transform 0.5s;
-}
-
-.breathing:hover {
-    transform: scale(1.25);
-}
+.breathing { transition: transform 0.5s; }
+.breathing:hover { transform: scale(1.25); }
 
 /*! Pickr 1.8.0 MIT | https://github.com/Simonwep/pickr */
 /* Button on page */
@@ -376,4 +335,36 @@ select {
     flex-grow: 1;
     border-radius: 5em;
     background: linear-gradient(180deg, red, #ff0, #0f0, #0ff, #00f, #f0f, red)
+}
+
+
+/*  */
+
+.btn-secondary {
+    border-color: var(--background-very-light);
+    background-color: var(--background-very-light);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    border-color: var(--background-very-light);
+    background-color: var(--background-very-light);
+    filter: brightness(0.9);
+}
+
+.dropdown-item {
+    border-color: var(--background-light);
+    background-color: var(--background-light);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    border-color: var(--background-light);
+    background-color: var(--background-light);
+    filter: brightness(0.9);
+}
+
+.dropdown-menu-dark {
+    border-color: var(--background);
+    background-color: var(--background-light);
 }
