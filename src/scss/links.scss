@@ -1,0 +1,72 @@
+:root {
+    --link-bg: rgba(66, 110, 255, 0.2);
+    --link-bg-hover: rgba(255, 255, 255, 0.3);
+}
+
+* {
+    text-align: center;
+    text-decoration: none;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    background: url('/assets/img/bg.jpg');
+    font-weight: 600;
+    display: block;
+}
+
+#userPhoto {
+    width: 100px;
+    height: 100px;
+    margin: 0px auto;
+    margin-top: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#userName {
+    color: #fff;
+    h1 {
+        margin: 0 auto;
+    }
+    p {
+        margin-top: 5px;
+    }
+}
+
+i {
+    margin-right: 0.5em;
+}
+
+#links {
+    max-width: 800px;
+    display: grid;
+    margin: 0px auto;
+    gap: 5% 5%;
+    grid-template-columns: 1fr 1fr;
+}
+
+#links-single {
+    max-width: 800px;
+    display: grid;
+    margin: 0px auto;
+    gap: 5% 5%;
+    grid-template-columns: 1fr;
+}
+
+
+.link {
+    display: block;
+    background-color: var(--link-bg);
+    color: #fff;
+    padding: 17px;
+    font-size: 1.2rem;
+    transition: all .25s cubic-bezier(.08, .59, .29, .99);
+    border-radius: 15px;
+    &:hover {
+        background-color: var(--link-bg-hover);
+        color: #000000;
+        border: none;
+    }
+}
