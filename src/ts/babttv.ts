@@ -1,6 +1,5 @@
 /* global $ JSZip Pickr svgAsPngUri saveAs */
 
-
 type PickrCol = string | {toHEXA(): string[]} | undefined;
 
 let pickerColour: PickrCol;
@@ -112,7 +111,6 @@ const addAllToOverview = async() => {
     $('#emote-grid img').remove();
     for(const emoteName of getEmoteNames()) {
         showEmote(emoteName);
-        await addToOverview(emoteName);
         await addToOverview(emoteName);
     }
     showEmote(oldEmote);
