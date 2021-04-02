@@ -6,8 +6,6 @@ let pickerColour: PickrCol;
 let pickr: any;
 let lastLayerColour: PickrCol;
 // !------------------------------------------------------------------------------------------
-
-
 const doctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [<!ENTITY nbsp "&#160;">]>';
 
 const reEncode = (data) => decodeURIComponent(encodeURIComponent(data).replace(/%([0-9A-F]{2})/g, (match, p1) => { const c = String.fromCharCode(`0x${p1}`); return c === '%' ? '%25' : c; }));
@@ -168,7 +166,7 @@ const addAllToOverview = async() => {
     for(const emoteName of emoteNames) {
         $('#emote-grid').append(`<img width="140px" src="" id="emote-overview-${emoteName}" style="display:none" class="breathing"/>`);
         $(`#emote-overview-${emoteName}`).on('click', hideOverview(emoteName));
-        emoteCalls.push(svgAsPngUri(emoteName, 15));
+        emoteCalls.push(svgAsPngUri(emoteName, 1.5));
     }
     showEmote(oldEmote);
     $('#emote-wrapper').show();
@@ -183,7 +181,7 @@ const setEmoteLayers = (emoteNameForce?: string) => {
     pickerColour = undefined;
     setupOptions('layer-name', getLayers(emoteName), setLayerColour);
     setupOptions('hair-type', getHairTypes(emoteName), showHair);
-    setupOptions('emote-scale', ['all', 'bttv', 'twitch']);
+    setupOptions('emote-scale', ['all', 'BTTV', 'twitch']);
     setTimeout(setLayerColour, 100);
 };
 
@@ -200,7 +198,6 @@ const getEmoteSizes = () => {
         default: return [];
     }
 };
-
 
 const downloadEmotes = async() => {
     const emoteSizes = getEmoteSizes();
@@ -246,14 +243,13 @@ window.onload = () => {
     const init = () => {
         $('#emote-name').text(titleCase(getEmoteNames()[0]));
         setEmoteLayers();
-        setTimeout(() => $('#overview-link').click(), 1000);
+        // setTimeout(() => $('#overview-link').click(), 1000);
     };
 
     setInterval(colourLayerIn, 100);
     setTimeout(init, 1000);
 
     $('#overview-link').on('click', showOverview);
-    $('#hair-type').on('change', () => showHair());
     $('#download-link').on('click', downloadEmotes);
     $('#page-forward').on('click', goForwardPage);
     $('#page-back').on('click', goBackPage);

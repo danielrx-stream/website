@@ -58,16 +58,22 @@ body {
 #emote-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    align-items: center;
-    justify-items: center;
+    place-items: center;
 }
 
-#overview-toolbox {
+.toolbox {
     display: grid;
     grid-column: 2;
     grid-row: 1;
+}
+
+#overview-toolbox {
     grid-template-rows: 2fr 2fr 4fr 1fr;
     grid-template-columns: 1fr;
+}
+
+#toolbox-grid-container {
+    grid-template-rows: 0.8fr repeat(3, 1fr) 0.4fr;
 }
 
 #content-grid-container {
@@ -77,12 +83,7 @@ body {
     gap: 0px 2.5%;
 }
 
-#toolbox-grid-container {
-    display: grid;
-    grid-column: 2;
-    grid-row: 1;
-    grid-template-rows: 0.8fr repeat(3, 1fr) 0.4fr;
-}
+
 
 .toolbox-row {
     padding-left: 20px;
@@ -102,14 +103,8 @@ body {
 }
 
 .toolbox-row-3 {
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 100%;
-    display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 0px 2.5%;
     justify-content: center;
-    align-items: center;
 }
 
 
