@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        setInterval(() => {
+            fetch('/assets/raw.sp', {mode: 'same-origin', cache: 'no-cache', headers : {'Content-Type': 'application/text', 'Accept': 'application/text'}})
+            .then((data) => data.text().then((data2) => {
+                const d = {};
+                data2.split('\n').map((x) => x.split('|')).forEach(([key, value]) => d[key] = value);
+                document.getElementById('artists').textContent = d.artist;
+                document.getElementById('name').textContent = d.title;
+                document.getElementById('album-current').src = d.artUrl.replace('https://open.spotify.com', 'https://i.scdn.co');
+            }))
+        }, 1000)
+    </script>
+    <style>
+
+        :root { --widget-h: 70px; }
+
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'proxima-nova', sans-serif;
+            overflow: hidden;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+        #container {
+            height: var(--widget-h);
+            display: flex;
+            background: #1b1d20;
+            margin: auto;
+            width: 350px;
+        }
+
+        img { width: var(--widget-h); }
+
+        .main {
+            padding-top: 10px;
+            max-width: 350px;
+            overflow: hidden;
+        }
+
+        .artists-height-fix {
+            min-height: 20px;
+            max-height: 20px;
+        }
+
+        #artists {
+            color: #25CBA3;
+            font-weight: 600;
+            font-size: medium;
+            text-transform: uppercase;
+        }
+
+        #name {
+            color: #fff;
+            font-size: x-large;
+        }
+
+        h4, h2 {
+            white-space: nowrap;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <img id="album-current" src="https://via.placeholder.com/70"/>
+        <div class="main">
+            <div class="artists-height-fix">
+                <h4 id="artists">Artist<h4>
+                </div>
+                <h2 id="name">Song Name</h2>
+            </div>
+        </div>
+    </body>
+    </html>
