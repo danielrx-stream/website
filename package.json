@@ -12,7 +12,7 @@
     "watch-assets": "nodemon -e '*' --watch src/assets-static/ --exec 'cp -r src/assets-static/* site/assets/'",
     "watch-js": "tsc -w",
     "watch": "npm-run-all --parallel watch-*",
-    "start:site": "cd site && npx live-server --ignore='**/raw.sp'"
+    "start:site": "cd site && npx live-server --ignore='**/raw.sp,**/assets/emotes/*'"
   },
   "repository": {
     "type": "git",

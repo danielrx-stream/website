@@ -1,0 +1,361 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.5/socket.io.js" integrity="sha512-2rUSTSAeOO02jF6eBqENNqPs1EohenJ5j+1dgDPdXSLz9nOlrr8DJk4zW/lDy8rjhGCSonW3Gx812XJQIKZKJQ==" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <script>
+    const socket = io('ws://danielserver:3456');
+
+let channel = 'danielrx_'
+
+socket.on('connect', () => {
+  socket.send({channel})
+});
+
+let ts = 0;
+let shapes = [];
+let avatars = [];
+let chatters = [];
+let avatarClasses = [];
+
+// handle the event sent with socket.send()
+socket.on('message', data => {
+  if(data.ts) { ts = data.ts; }
+  if(data.shapes) { shapes = data.shapes; }
+  if(data.chatters) { chatters = data.chatters; }
+  if(data.avatars) {
+    if(avatars.length !== 0) { return; }
+    avatars = data.avatars;
+    avatarClasses = avatars.filter((avatar) => avatar.avatars.length  !== 0).map((av) => {
+        const imageLink = `/assets/avatars/${(av.avatars[0])}`
+        let avatar = emoteData[imageLink];
+        if(!avatar) { avatar = loadImage(imageLink); }
+        emoteData[imageLink] = avatar;
+        return new Avatar(emoteData[imageLink], random(0, 1080), 960, av.chatter);
+    })
+  }
+});
+
+// handle the event sent with socket.emit()
+socket.on('greetings', (elem1, elem2, elem3) => {
+  console.log(elem1, elem2, elem3);
+});
+
+
+const addAvatar = (av) => {
+  if(avatarClasses.some((avv) => avv.username === av.chatter)) { return; }
+  const imageLink = `/assets/avatars/${(av.avatars[0])}`
+  let avatar = emoteData[imageLink];
+  if(!avatar) { avatar = loadImage(imageLink); }
+  emoteData[imageLink] = avatar;
+  avatarClasses.push(new Avatar(emoteData[imageLink], random(0, 1080), 960, av.chatter));
+}
+
+const randomElement = (x) => x[round(random(0, x.length - 1))];
+
+function preload() {}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  fill(255);
+  textSize(50);
+}
+
+const emoteData = {}
+
+class Avatar {
+  constructor(image, x, y, username) {
+    this.uuid = Math.floor(Math.random() * 1000000000);
+    this.image = image;
+    this.username = username;
+    this.framesWithoutHeight = 0;
+    this.xpToNextLevel = 100;
+    this.level = 1;
+    this.xp = 0;
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
+    this.position = createVector(x - this.image.width / 2, y - this.image.height / 2);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+    this.scale = 2/3;
+  }
+
+  get top() { return round(this.position.y - (this.scale * this.image.height / 2)); }
+  get right() { return round(this.position.x + (this.scale * this.image.width / 2)); }
+  get bottom() { return round(this.position.y + (this.scale * this.image.height / 2)); }
+  get left() { return round(this.position.x - (this.scale * this.image.width / 2)); }
+
+  get speed() { return this.velocity.mag(); }
+
+  applyForce(force) { this.acceleration.add(force); }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+    if(this.bottom >= height) { this.framesWithoutHeight++; } else { this.framesWithoutHeight = 0; }
+    if(this.framesWithoutHeight > 30) { // If on the ground for 30 frames
+      this.jump();
+      this.framesWithoutHeight = 0;
+    }
+    if(this.speed < 2) { this.velocity.add(random(0,  5)); } // If walking too slow, speed up
+    avatarClasses.filter((x) => x.uuid !== this.uuid).forEach((avatar) => this.checkCollision(avatar));
+    this.checkEdges();
+  }
+
+  jump() { this.velocity.add(0, -random(this.scale * 5, this.scale * 25)) }
+
+  display() {
+    const w = this.image.width * this.scale;
+    const h = this.image.height * this.scale;
+    fill(255, 0);
+    push();
+    translate(this.left, this.top)
+    image(this.image, 0, 0, w, h);
+    fill(255);
+    textSize(20);
+    stroke(0);
+    text(this.username, 0, -25);
+    fill('red');
+    rect(0, -4, w, -10);
+    fill('green');
+    rect(0, -4, (w * this.health) / this.maxHealth, -10);
+    fill(255, 0);
+    rect(0, 0, w, -4);
+    fill('yellow');
+    rect(0, 0, (w * this.xp) / this.xpToNextLevel, -4);
+    pop();
+  }
+
+  /**
+   * Returns the position of the avatar in relation to the other
+   * @param {Avatar} other 
+   */
+  orientation(other) {
+    const dy = round(this.position.y) - round(other.position.y);
+    const dx = round(this.position.x) - round(other.position.x);
+    if(dy === 0) {
+      if(dx > 0) { // RIGHT
+        return 'R';
+      }
+      if(dx === 0) { return 'SAME'; }
+      return 'L';
+    }
+
+    if(dx === 0) {
+      if(dy > 0) {
+        return 'B';
+      }
+      if(dy === 0) { return 'SAME'; }
+      return 'A';
+    }
+
+    if(dy > 0) { // BELOW
+      if(dx > 0) { // RIGHT
+        return 'BR';
+      }
+      return 'BL';
+    }
+    // ABOVE
+    if(dx > 0) { // RIGHT
+        return 'AR';
+    }
+    return 'AL';
+  }
+
+  hit(other) {
+    Math.random() > 0.5 ? (other.health--, this.xp++) : (this.health--, other.xp++);
+  }
+
+  /**
+   * @param {Avatar} other 
+   */
+  checkCollision(other) {
+    if(this.left > other.right) { return; }
+    if(this.right < other.left) { return; }
+    if(this.top > other.bottom) { return; }
+    if(this.bottom < other.top) { return; }
+    // return;
+    const ore = this.orientation(other);
+    switch(ore) {
+      case 'SAME': return;
+      case 'AL': {
+        if(this.right > other.left) {
+          this.velocity.x *= -0.9;
+          this.position.x = other.left - (this.scale * this.image.width / 2);
+          this.hit(other);
+        } else if(this.bottom < other.top) {
+          this.velocity.y *= -0.9;
+          this.position.y = other.top + (this.scale * this.image.height / 2);
+          this.hit(other);
+        }
+        return;
+      }
+      case 'A': {
+        if(this.bottom < other.top) {
+          this.velocity.y *= -0.9;
+          this.position.y = other.top + (this.scale * this.image.height / 2);
+          this.hit(other);
+        }
+        return;
+      }
+      case 'AR': {
+        if(this.left < other.right) {
+          this.velocity.x *= -0.9;
+          this.position.x = other.right + (this.scale * this.image.width / 2);
+          this.hit(other);
+        } else if(this.bottom < other.top) {
+          this.velocity.y *= -0.9;
+          this.position.y = other.top + (this.scale * this.image.height / 2);
+          this.hit(other);
+        }
+        return;
+      }
+      case 'R': {
+        if(this.left < other.right) {
+          this.velocity.x *= -0.9;
+          this.position.x = other.right + (this.scale * this.image.width / 2);
+          this.hit(other);
+        }
+      }
+      case 'BL': {
+        if(this.right > other.left) {
+          this.velocity.x *= -0.9;
+          this.position.x = other.left - (this.scale * this.image.width / 2);
+          this.hit(other);
+        } else if(this.top > other.bottom) {
+          this.velocity.y *= -0.9;
+          this.position.y = other.bottom - (this.scale * this.image.height / 2);
+          this.hit(other);
+        }
+        return;
+      }
+      case 'B': {
+        if(this.top > other.bottom) {
+          this.velocity.y *= -0.9;
+          this.position.y = other.bottom - (this.scale * this.image.height / 2);
+          this.hit(other);
+        }
+        return;
+      }
+      case 'BR': {
+        if(this.left < other.right) {
+          this.velocity.x *= -0.9;
+          this.position.x = other.right + (this.scale * this.image.width / 2);
+          this.hit(other);
+        } else if(this.top > other.bottom) {
+          this.velocity.y *= -0.9;
+          this.position.y = other.bottom - (this.scale * this.image.height / 2);
+          this.hit(other);
+        }
+        return;
+      }
+
+      case 'L': {
+        if(this.right > other.left) {
+          this.velocity.x *= -0.9;
+          this.position.x = other.left - (this.scale * this.image.width / 2);
+          this.hit(other);
+        }
+      }
+    }
+  }
+
+  checkEdges() {
+    if (this.top < 0) {
+      this.velocity.y *= -0.5;
+      this.position.y = this.ccale * this.image.height / 2;
+    }
+
+    if (this.right > width) {
+      this.velocity.x *= -0.9;
+      this.position.x = width - (this.scale * this.image.width / 2);
+    }
+
+    if (this.left < 0) {
+      this.velocity.x *= -0.9;
+      this.position.x = (this.scale * this.image.width / 2);
+    }
+
+    if (this.bottom > height) {
+      this.velocity.y *= -0.9;
+      this.position.y = height - (this.scale * this.image.height / 2);
+    }
+  }
+}
+
+const drawShape = (shape) => {
+  switch(shape.type) {
+    case 'emote': {
+      const imageLink = `/assets/emotes/${shape.emoteHash}.${shape.fileType}`
+      let img = emoteData[imageLink];
+      if(!img) { img = loadImage(imageLink); }
+      emoteData[imageLink] = img;
+      image(emoteData[imageLink], shape.x, shape.y);
+      break;
+    }
+
+    case 'ellipse': {
+      ellipse(shape.x, shape.y, shape.w, shape.h);
+      break;
+    }
+    case 'rect': {
+      rect(shape.x, shape.y, shape.w, shape.h);
+      break;
+    }
+    case 'triangle': {
+      triangle(shape.x1, shape.y1, shape.x2, shape.y2, shape.x3, shape.y3);
+      break;
+    }
+
+    case 'quad': {
+      quad(shape.x1, shape.y1, shape.x2, shape.y2, shape.x3, shape.y3, shape.x4, shape.y4);
+      break;
+    }
+
+    case 'text': {
+      push();
+      text(shape.text.join(' '), shape.x, shape.y);
+      pop();
+    }
+
+    case 'line': {
+      push();
+      strokeWeight(shape.thickness || 1);
+      stroke(0, 255 * (shape.opacity || 1));
+      line(shape.x1, shape.y1, shape.x2, shape.y2);
+      pop();
+      break;
+    }
+  }
+}
+
+function draw() {
+  clear();
+
+  const gravity = createVector(0, 0.5);
+
+  avatarClasses.forEach((avatar) => {
+    avatar.applyForce(gravity);
+    avatar.update();
+    avatar.display();
+  })
+
+  avatarClasses = avatarClasses.filter((avatar) => avatar.health > 0);
+
+  shapes.forEach(drawShape);
+}
+
+  </script>
+</body>
+</html>
